@@ -37,7 +37,7 @@ public class ProductResourceUnitTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(payload)
                 .when()
-                .post("/products")
+                .post("/api/products")
                 .then()
                 .statusCode(201).extract().as(Product.class);
         Assertions.assertEquals(product.getName(), "Iphone 16");
@@ -46,7 +46,7 @@ public class ProductResourceUnitTest {
     @Test
     public void getProductsTest() {
         Mockito.when(productServiceMock.getAllProducts()).thenReturn(Uni.createFrom().item(Response.status(OK).entity(getProducts()).build()));
-        Product[] product = RestAssured.when().get("/products").then().statusCode(200).extract().as(Product[].class);
+        Product[] product = RestAssured.when().get("/api/products").then().statusCode(200).extract().as(Product[].class);
         Assertions.assertEquals(product[0].getName(), "Airpods pro");
     }
 
@@ -55,7 +55,7 @@ public class ProductResourceUnitTest {
     public void getProductByIdTest() {
         UUID id = UUID.randomUUID();
         Mockito.when(productServiceMock.getProductById(id)).thenReturn(Uni.createFrom().item(getProducts().get(1)));
-        Product product = RestAssured.given().pathParam("id", id.toString()).when().get("/products/{id}").then().statusCode(200).extract().as(Product.class);
+        Product product = RestAssured.given().pathParam("id", id.toString()).when().get("/api/products/{id}").then().statusCode(200).extract().as(Product.class);
         Assertions.assertEquals(product.getName(), "Iphone 15");
     }
 
@@ -64,7 +64,7 @@ public class ProductResourceUnitTest {
         UUID id = UUID.randomUUID();
         String errorResponse = "{\"statusCode\":400,\"messages\":\"Validation failed\",\"details\":[\"Product not found\"]}";
         Mockito.when(productServiceMock.getProductById(id)).thenReturn(Uni.createFrom().failure(new ProductNotFoundException("Product not found")));
-        RestAssured.given().pathParam("id", id.toString()).when().get("/products/{id}").then().statusCode(400)
+        RestAssured.given().pathParam("id", id.toString()).when().get("/api/products/{id}").then().statusCode(400)
                 .body("details[0]", equalTo("Product not found"));
     }
 
@@ -72,14 +72,14 @@ public class ProductResourceUnitTest {
     public void getDeleteByIdTest() {
         UUID id = UUID.randomUUID();
         Mockito.when(productServiceMock.deleteProductById(id)).thenReturn(Uni.createFrom().item(Response.ok().status(NO_CONTENT).build()));
-        RestAssured.given().pathParam("id", id.toString()).when().delete("/products/{id}").then().statusCode(204);
+        RestAssured.given().pathParam("id", id.toString()).when().delete("/api/products/{id}").then().statusCode(204);
     }
 
     @Test
     public void getDeleteByIdNotFoundTest() {
         UUID id = UUID.randomUUID();
         Mockito.when(productServiceMock.deleteProductById(id)).thenReturn(Uni.createFrom().item(Response.ok().status(NOT_FOUND).build()));
-        RestAssured.given().pathParam("id", id.toString()).when().delete("/products/{id}").then().statusCode(404);
+        RestAssured.given().pathParam("id", id.toString()).when().delete("/api/products/{id}").then().statusCode(404);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class ProductResourceUnitTest {
         Mockito.when(productServiceMock.updateProduct(id, "2rd generation")).thenReturn(Uni.createFrom()
                 .item(Response.status(OK).entity(getProducts().get(0)).build()));
         Product product = RestAssured.given().pathParam("id", id).queryParam("description", "2rd generation")
-                .when().put("/products/{id}").then().statusCode(200).extract().as(Product.class);
+                .when().put("/api/products/{id}").then().statusCode(200).extract().as(Product.class);
         Assertions.assertNotNull(product);
         Assertions.assertEquals(product.getName(), "Airpods pro");
     }

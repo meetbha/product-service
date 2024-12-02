@@ -16,8 +16,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Entity
-@Table(name = "Product")
+@Entity(name = "Products")
+@Table(name = "Products")
 public class Product extends PanacheEntityBase {
 
     @Id
@@ -25,10 +25,12 @@ public class Product extends PanacheEntityBase {
     private UUID id;
     @Column(nullable = false, unique = true)
     private String name;
+    @Column
     private String description;
     @Column(nullable = false)
     private BigDecimal price;
     @CreationTimestamp
+    @Column(name = "created_at")
     private Date createdAt;
 
 }

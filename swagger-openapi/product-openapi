@@ -1,0 +1,100 @@
+---
+openapi: 3.1.0
+components:
+  schemas:
+    UUID:
+      type: string
+      format: uuid
+      pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+    ProductDto:
+      type: object
+      required:
+      - name
+      - price
+      properties:
+        price:
+          type: number
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+paths:
+  /api/products:
+    get:
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+      summary: Get Products
+      tags:
+      - Product Resource
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+      summary: Add Product
+      tags:
+      - Product Resource
+  /api/products/{id}:
+    put:
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      - name: description
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+      summary: Update Product
+      tags:
+      - Product Resource
+    get:
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+      summary: Get Product By Id
+      tags:
+      - Product Resource
+    delete:
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+      summary: Delete Product
+      tags:
+      - Product Resource
+info:
+  title: product-system API
+  version: 1.0.0-SNAPSHOT

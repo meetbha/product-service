@@ -33,12 +33,11 @@ class ProductResourceTest {
         payload.put("description", "A18 chip");
         payload.put("price", "2500.00");
 
-        String description = "A19 chip";
 
         Product product = given().contentType(MediaType.APPLICATION_JSON)
                 .body(payload)
                 .when()
-                .post("/products")
+                .post("/api/products")
                 .then()
                 .statusCode(201)
                 .extract()
@@ -48,14 +47,14 @@ class ProductResourceTest {
         given().contentType(MediaType.APPLICATION_JSON)
                 .body(payload)
                 .when()
-                .post("/products")
+                .post("/api/products")
                 .then()
                 .statusCode(400)
                 .body("details[0]", equalTo(PRODUCT_EXISTS + name));
 
         given()
                 .when()
-                .get("/products")
+                .get("/api/products")
                 .then()
                 .statusCode(200)
                 .body(containsString(name));
@@ -63,23 +62,25 @@ class ProductResourceTest {
         given()
                 .pathParam("id", id.toString())
                 .when()
-                .get("/products/{id}")
+                .get("/api/products/{id}")
                 .then().statusCode(200)
                 .body("name", equalTo(name));
 
+
         given()
                 .pathParam("id", id.toString())
-                .queryParam("description", description)
+                .queryParam("description", "A19 chip")
                 .when()
-                .put("/products/{id}")
+                .put("/api/products/{id}")
                 .then()
                 .statusCode(200)
-                .body("description", equalTo(description));
+                .body("description", equalTo("A19 chip"));
+
 
         given()
                 .pathParam("id", id.toString())
                 .when()
-                .delete("/products/{id}")
+                .delete("/api/products/{id}")
                 .then()
                 .statusCode(204);
     }
@@ -91,7 +92,7 @@ class ProductResourceTest {
         given()
                 .pathParam("id", id)
                 .when()
-                .get("/products/{id}")
+                .get("/api/products/{id}")
                 .then()
                 .statusCode(400)
                 .body("details[0]", equalTo("Product not found with id " + id));
@@ -100,7 +101,7 @@ class ProductResourceTest {
     @Test
     @Order(3)
     public void getDeleteByIdNotFoundTest() {
-        given().pathParam("id", UUID.randomUUID()).when().delete("/products/{id}").then().statusCode(404);
+        given().pathParam("id", UUID.randomUUID()).when().delete("/api/products/{id}").then().statusCode(404);
     }
 
     @Test
@@ -111,7 +112,7 @@ class ProductResourceTest {
         given().contentType(MediaType.APPLICATION_JSON)
                 .body(payload)
                 .when()
-                .post("/products")
+                .post("/api/products")
                 .then()
                 .statusCode(400)
                 .body("details[0]", equalTo("Product name is mandatory"));
@@ -125,7 +126,7 @@ class ProductResourceTest {
         given().contentType(MediaType.APPLICATION_JSON)
                 .body(payload)
                 .when()
-                .post("/products/name")
+                .post("/api/products/name")
                 .then()
                 .statusCode(500);
     }

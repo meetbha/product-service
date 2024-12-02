@@ -1,5 +1,6 @@
 package com.product.service;
 
+import com.product.dto.ProductDto;
 import com.product.exception.DuplicateDataFoundException;
 import com.product.exception.ProductNotFoundException;
 import com.product.model.Product;
@@ -10,10 +11,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Date;
 import java.util.UUID;
 
-import static com.product.util.Constants.PRODUCT_EXISTS;
-import static com.product.util.Constants.PRODUCT_NOT_FOUND;
+import static com.product.util.Constants.*;
 import static jakarta.ws.rs.core.Response.Status.CREATED;
 import static jakarta.ws.rs.core.Response.Status.OK;
 import static org.jboss.resteasy.reactive.RestResponse.Status.NOT_FOUND;
@@ -54,8 +55,9 @@ public class ProductService {
         return getProductById(id)
                 .onItem().ifNotNull().transformToUni(product -> {
                     product.setDescription(description);
+                    product.setCreatedAt(new Date());
                     return product.persistAndFlush().onItem().transform(item -> Response.status(OK).entity(product).build());
-                }).invoke(() -> log.info("Product updated with description {}", description));
+                }).invoke(() -> log.info("Product description updated {}", description));
     }
 
 }

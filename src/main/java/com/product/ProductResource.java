@@ -7,7 +7,6 @@ import com.product.service.ProductService;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -16,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.UUID;
 
 @Slf4j
-@Path("/products")
+@Path("/api/products")
 @ApplicationScoped
 public class ProductResource {
 
@@ -84,7 +83,9 @@ public class ProductResource {
      */
     @Path("/{id}")
     @PUT
-    public Uni<Response> updateProduct(UUID id, @NotEmpty @QueryParam("description") String description) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<Response> updateProduct(UUID id, @QueryParam("description") String description) {
         return productService.updateProduct(id, description);
     }
 }
