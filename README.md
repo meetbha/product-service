@@ -26,21 +26,27 @@ https://github.com/meetbha/product-service.git
 
 - Install and start PostgreSQL.
 
-- Create a database and user:
+- Create a database:
 
 ```shell script
 CREATE DATABASE ecommerce;
 ```
 
-3. Run the Application
+3. Go to the src/main/resources/ and edit the application.properties to configure PostgreSQL Database name and credentials.
+
+```shell script
+quarkus.datasource.db-kind=postgresql
+quarkus.datasource.username=postgres
+quarkus.datasource.password=test
+quarkus.datasource.reactive.url=postgresql://localhost:5432/ecommerce
+```
+
+4. Run the Application
 
 ```shell script 
 ./mvnw compile quarkus:dev
 ```
 
-## Configuration
-
-Go to the src/main/resources/ and edit the application.properties to configure Postgresql Database name and credentials.
 
 ## API Endpoints
 
